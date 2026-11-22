@@ -987,7 +987,7 @@ project phases and the engineering details.">
 
     #biz .phase-video {
       max-width: 880px;
-      margin: 40px auto 0;
+      margin: 24px auto 32px;
     }
 
     #biz .phase-video video {
@@ -1342,6 +1342,12 @@ project phases and the engineering details.">
     <section id="result" class="alt">
       <div class="wrap">
         <h2>What the robot does today</h2>
+        <figure class="phase-video">
+          <video src="videos/phase0.mp4" poster="videos/phase0.jpg"
+            data-noauto playsinline></video>
+          <figcaption><b>The result in the full video</b> (0:26, with
+            music).</figcaption>
+        </figure>
         <p class="sub">The latest model is SmolVLA with skill texts. A planner
           looks at the cameras and sends the next skill as text. The policy
           picks the parcel and moves the arm. In this cycle the planner sent
@@ -1364,14 +1370,8 @@ project phases and the engineering details.">
           <li>Back home</li>
         </ol>
         <p class="note">One box takes 23.7 s from the skill text to home.
-          The overview shows this cycle at 0:11; the video below shows all
+          The overview shows this cycle at 0:11; the video above shows all
           of it.</p>
-        <figure class="phase-video">
-          <video src="videos/phase0.mp4" poster="videos/phase0.jpg"
-            data-noauto playsinline></video>
-          <figcaption><b>The result in the full video</b> (0:26, with
-            music).</figcaption>
-        </figure>
       </div>
     </section>
 
@@ -1474,6 +1474,12 @@ project phases and the engineering details.">
       <div class="wrap">
         <span class="eyebrow">Phase 01</span>
         <h2>Setting up</h2>
+        <figure class="phase-video">
+          <video src="videos/phase1.mp4" poster="videos/phase1.jpg"
+            data-noauto playsinline></video>
+          <figcaption><b>Phase 01 in the full video</b> (0:31, with
+            music).</figcaption>
+        </figure>
         <p class="sub">Before training, the task must be possible for the
           robot and the result must be measurable.</p>
         <figure class="showcase">
@@ -1521,12 +1527,6 @@ project phases and the engineering details.">
             </div>
           </div>
         </div>
-        <figure class="phase-video">
-          <video src="videos/phase1.mp4" poster="videos/phase1.jpg"
-            data-noauto playsinline></video>
-          <figcaption><b>Phase 01 in the full video</b> (0:31, with
-            music).</figcaption>
-        </figure>
       </div>
     </section>
 
@@ -1534,6 +1534,12 @@ project phases and the engineering details.">
       <div class="wrap">
         <span class="eyebrow">Phase 02</span>
         <h2>Designing approaches: from push to pick and place</h2>
+        <figure class="phase-video">
+          <video src="videos/phase2.mp4" poster="videos/phase2.jpg"
+            data-noauto playsinline></video>
+          <figcaption><b>Phase 02 in the full video</b> (0:41, with
+            music).</figcaption>
+        </figure>
         <p class="sub">The first design pushed each parcel off the heap. It
           failed for a clear reason, so I changed the motion, not the
           model.</p>
@@ -1567,12 +1573,6 @@ project phases and the engineering details.">
               arm flips it, then pushes it off the table.</figcaption>
           </figure>
         </div>
-        <figure class="phase-video">
-          <video src="videos/phase2.mp4" poster="videos/phase2.jpg"
-            data-noauto playsinline></video>
-          <figcaption><b>Phase 02 in the full video</b> (0:41, with
-            music).</figcaption>
-        </figure>
       </div>
     </section>
 
@@ -1580,6 +1580,12 @@ project phases and the engineering details.">
       <div class="wrap">
         <span class="eyebrow">Phase 03</span>
         <h2>Model comparison: Diffusion Policy vs SmolVLA</h2>
+        <figure class="phase-video">
+          <video src="videos/phase3.mp4" poster="videos/phase3.jpg"
+            data-noauto playsinline></video>
+          <figcaption><b>Phase 03 in the full video</b> (1:34, with
+            music).</figcaption>
+        </figure>
         <p class="sub">Same 99 demos and one task text for both. At first
           glance, both work. Each needs different work to run fast and
           smooth.</p>
@@ -1642,12 +1648,6 @@ project phases and the engineering details.">
           2.02&deg;), but Diffusion-BSP was the best on the robot. The next
           phases use SmolVLA, because only SmolVLA reads a text: this makes
           skill texts possible (phase 05).</p>
-        <figure class="phase-video">
-          <video src="videos/phase3.mp4" poster="videos/phase3.jpg"
-            data-noauto playsinline></video>
-          <figcaption><b>Phase 03 in the full video</b> (1:34, with
-            music).</figcaption>
-        </figure>
       </div>
     </section>
 
@@ -1655,6 +1655,12 @@ project phases and the engineering details.">
       <div class="wrap">
         <span class="eyebrow">Phase 04</span>
         <h2>Fine-tuning: corrections, one skill at a time</h2>
+        <figure class="phase-video">
+          <video src="videos/phase4.mp4" poster="videos/phase4.jpg"
+            data-noauto playsinline></video>
+          <figcaption><b>Phase 04 in the full video</b> (0:37, with
+            music).</figcaption>
+        </figure>
         <p class="sub">When the robot fails, I take over with the leader arm
           and record the fix. Which corrections I add matters more than how
           many.</p>
@@ -1696,12 +1702,6 @@ project phases and the engineering details.">
               wrist cameras).</figcaption>
           </figure>
         </div>
-        <figure class="phase-video">
-          <video src="videos/phase4.mp4" poster="videos/phase4.jpg"
-            data-noauto playsinline></video>
-          <figcaption><b>Phase 04 in the full video</b> (0:37, with
-            music).</figcaption>
-        </figure>
       </div>
     </section>
 
@@ -1709,6 +1709,12 @@ project phases and the engineering details.">
       <div class="wrap">
         <span class="eyebrow">Phase 05</span>
         <h2>Skill texts: make the model read the text</h2>
+        <figure class="phase-video">
+          <video src="videos/phase5.mp4" poster="videos/phase5.jpg"
+            data-noauto playsinline></video>
+          <figcaption><b>Phase 05 in the full video</b> (2:01, with
+            music).</figcaption>
+        </figure>
         <p class="sub">With one task text for every parcel, SmolVLA ignores the
           text. A distinct text for each skill makes the text count. Then a
           planner can send it.</p>
@@ -1806,12 +1812,6 @@ project phases and the engineering details.">
           Sources: <a href="https://arxiv.org/abs/2410.24164">&pi;0</a>,
           <a href="https://arxiv.org/abs/2504.16054">&pi;0.5</a>,
           <a href="https://arxiv.org/abs/2502.19417">Hi Robot</a>.</p>
-        <figure class="phase-video">
-          <video src="videos/phase5.mp4" poster="videos/phase5.jpg"
-            data-noauto playsinline></video>
-          <figcaption><b>Phase 05 in the full video</b> (2:01, with
-            music).</figcaption>
-        </figure>
       </div>
     </section>
 
@@ -1819,6 +1819,12 @@ project phases and the engineering details.">
       <div class="wrap">
         <span class="eyebrow">Phase 06</span>
         <h2>Benchmarks: how far it goes</h2>
+        <figure class="phase-video">
+          <video src="videos/phase6.mp4" poster="videos/phase6.jpg"
+            data-noauto playsinline></video>
+          <figcaption><b>Phase 06 in the full video</b> (1:22, with
+            music).</figcaption>
+        </figure>
         <p class="sub">4 parcel kinds: orange box, black box, black bag and
           white bag. The black box and the black bag look alike. Success means
           all parcels cleared, 0 wrong labels and no help.</p>
@@ -1854,12 +1860,6 @@ project phases and the engineering details.">
               (keys). The black box took several tries. This is one run.</p>
           </div>
         </div>
-        <figure class="phase-video">
-          <video src="videos/phase6.mp4" poster="videos/phase6.jpg"
-            data-noauto playsinline></video>
-          <figcaption><b>Phase 06 in the full video</b> (1:22, with
-            music).</figcaption>
-        </figure>
       </div>
     </section>
 
@@ -1867,6 +1867,12 @@ project phases and the engineering details.">
       <div class="wrap">
         <span class="eyebrow">Phase 07</span>
         <h2>Limits and next steps</h2>
+        <figure class="phase-video">
+          <video src="videos/phase7.mp4" poster="videos/phase7.jpg"
+            data-noauto playsinline></video>
+          <figcaption><b>Phase 07 in the full video</b> (0:37, with
+            music).</figcaption>
+        </figure>
         <p class="sub">What still fails, and the fix I would try next.</p>
         <table>
           <tr>
@@ -1923,12 +1929,6 @@ project phases and the engineering details.">
               top-box text lifts only the top box.</figcaption>
           </figure>
         </div>
-        <figure class="phase-video">
-          <video src="videos/phase7.mp4" poster="videos/phase7.jpg"
-            data-noauto playsinline></video>
-          <figcaption><b>Phase 07 in the full video</b> (0:37, with
-            music).</figcaption>
-        </figure>
         <p class="quote" style="margin-top:48px">First make the model
           reliable for the task. Then make it faster.</p>
       </div>
