@@ -1453,7 +1453,7 @@ project phases and the engineering details.">
             </div>
             <div class="ph" style="left:280px;top:417px;--c:#be123c">
               <h4><a href="#p7">Limits and next steps</a></h4>
-              <p>Vision, start, data, compute and the gripper.</p>
+              <p>Vision, stacks, start, data, compute and the gripper.</p>
             </div>
           </div>
         </div>
@@ -1592,18 +1592,29 @@ project phases and the engineering details.">
         <div class="grid2" style="align-items:start">
           <div class="card" id="bsp">
             <h3>B-spline policy (BSP)</h3>
-            <p>The model predicts a smooth curve, not one joint target per
-              frame. A 50 Hz loop plays the curve at a set speed. Cube task,
-              time to back home:</p>
+            <p>A normal policy predicts one joint target for each 30 fps
+              frame. Thus the arm moves at the speed of the demos. A B-spline
+              policy predicts a short smooth curve instead: control points
+              and knot times for the next 1.2-1.5 s.</p>
+            <p><b>Why it works.</b> The curve has a value at every moment,
+              not only at the frames. A 50 Hz loop reads it by the clock, so
+              the same curve plays at 1&times;, 2&times; or 3&times; with no
+              new training. A cubic B-spline has no jumps in position or
+              speed, and each new curve starts at the point nearest to the
+              last command, with a short blend. Thus the arm does not jerk
+              between plans. Cube task, time to back home:</p>
             <table class="mini">
               <tr><td>Normal model</td><td>11.9 s</td></tr>
               <tr><td>BSP at 1&times;</td><td>12.6 s</td></tr>
               <tr><td>BSP at 2&times;</td><td>6.5 s</td></tr>
               <tr><td>BSP at 3&times;</td><td><b>4.5 s</b></td></tr>
             </table>
-            <p>The speed is a setting of the loop, not of the model. The top
-              speed depends on the servo limits and the plan time, so the
-              parcel tests use 1.5&times;.</p>
+            <p><b>The limit.</b> The next plan must arrive before the curve
+              ends. A SmolVLA-BSP plan takes about 0.22 s, so the safe speed
+              is about 1.5-2&times;, and the servos also set a limit. The
+              parcel tests use 1.5&times;. Method: <a
+                href="https://arxiv.org/abs/2607.09648">Han et al. 2026,
+                B-spline Policy (arXiv 2607.09648)</a>.</p>
           </div>
           <figure class="clip"><video src="videos/heap5_diffusion_bsp.mp4"
               poster="videos/heap5_diffusion_bsp.jpg" muted loop
@@ -1688,6 +1699,13 @@ project phases and the engineering details.">
             </div>
           </div>
         </div>
+        <p class="lesson"><b>Takeaway: a correction or a new skill?</b> A
+          correction fixes a skill that the model already has, like the
+          far-edge grasp. Stacked boxes were a new skill: only 5 of the 99
+          demos of dataset B start with a box on a box, so the model could not
+          do it at all. Corrections cannot teach a missing skill. Thus a new
+          skill needs full demos (about 20 good ones or more), not DAgger
+          corrections.</p>
         <div class="videos" style="margin-top:36px">
           <figure><video src="videos/heap8_far_edge.mp4"
               poster="videos/heap8_far_edge.jpg" muted loop
@@ -1860,6 +1878,13 @@ project phases and the engineering details.">
               (keys). The black box took several tries. This is one run.</p>
           </div>
         </div>
+        <p class="lesson"><b>Not passing yet: the top-box skill.</b> On
+          stacked boxes, the top-box text wins only 41 % of the frames in the
+          offline test (pass: 80 %), and the error stays about 4&deg; with any
+          text (2&deg; on normal frames). On the robot, it cleared 3 of 5
+          stacks, and a model also used the stack grasp on normal boxes.
+          SmolVLA does not see the stack well: the vision, not the text, is
+          the problem.</p>
       </div>
     </section>
 
@@ -1885,6 +1910,13 @@ project phases and the engineering details.">
             <td>Touching dark parcels look like one region.</td>
             <td>Use a better camera and even, fixed lighting. Add a
               segmentation planner that splits touching parcels.</td>
+          </tr>
+          <tr>
+            <td><b>Stacks</b></td>
+            <td>SmolVLA does not see a stacked box well, so the top-box
+              skill does not pass.</td>
+            <td>Record 20-25 more box-stack demos, and let the planner find
+              the stack and send the top-box text.</td>
           </tr>
           <tr>
             <td><b>Start</b></td>
@@ -2358,6 +2390,18 @@ project phases and the engineering details.">
       <div class="panel" id="e-speed">
         <h2>p03 &middot; inference, control and bsp</h2>
         <p class="why">each plan must arrive in time. BSP turns a plan into a curve, so speed is a setting, and the plan time sets the top speed.</p>
+        <p class="muted">BSP (<a href="https://arxiv.org/abs/2607.09648">Han
+          et al. 2026, arXiv 2607.09648</a>; fit, chunk and decode follow the
+          official <code>bspline_action.py</code>, MIT): the policy predicts
+          one cubic B-spline segment in place of a 30 fps chunk: 16 rows (10
+          interior knots + 2 x degree), column 0 the knot time, columns 1-6
+          the control points. Targets: fit error &le; 0.5&deg; (median
+          0.41&deg;), 4.9 frames per knot, about 1.4 s per segment. The 50 Hz
+          executor samples tau = t &middot; 30 &middot; speed, starts a new
+          segment at the point nearest the last command and blends it in
+          (smoothstep). Speed limit v<sub>max</sub> = (1 &minus; f) S / (30
+          L): SmolVLA-BSP (L 0.22 s, p95 0.3 s) about 1.8x; Diffusion-BSP
+          (L about 95 ms) about 2.3x higher.</p>
         <p class="muted"><code>bsp/bench_plan.py</code>: 5 fixed frames,
           fixed noise, 40 repeats. Noise floor 0&deg;, &lt;1 % time. Gain vs
           the reference row.</p>
@@ -2663,6 +2707,12 @@ v_max  = (1 - f) * S / (30 * L)
           </figure>
         </div>
       <p class="so">short, skill-specific corrections at a small share (7 %) keep the start motion. All failures at once (45 % of the frames) do not.</p>
+      <p class="so">correction or new skill? dataset B has only 5/99
+        box-on-box starts (eps 40, 75, 76, 80, 81), so the stack is a new
+        skill, not a correction. DAgger fragments only fix a skill that is
+        already there (far edge). A new skill needs about 20 or more full
+        demos (the 20 box-stack demos; in sk5d, 13-16 episodes per new skill
+        were not enough).</p>
       </div>
 
       <div class="panel" id="e-skills">
@@ -3029,10 +3079,19 @@ push "sweep lone item beyond wooden desk border"</pre>
           at the start, then box at 36 s, bag at 70 s, box at 91 s. The key
           log has no episode clock, so these times come from the resets and
           the grasp style (&plusmn;2 s).</p>
+        <h3>top-box skill (stacked boxes): not passing</h3>
+        <p class="muted">Offline language test, box-on-box frames: the top
+          text wins 41 % (sk3d) and 19 % (sk5d), pass 80 %; the error is
+          about 4.0-4.2&deg; with any text (normal frames about
+          2.1-2.4&deg;). Robot: fbs clears 3/5 stacks but uses the stack
+          grasp on normal boxes (2/5 on a normal heap); b_box grasps at table
+          height (the bottom box or the whole stack). SmolVLA does not see the
+          stack well: a vision problem, not a text problem.</p>
         <p class="so">more parcels and more kinds both hurt; with one text the
           model cannot select the skill in a mixed heap. With skill texts sent
           by human input, the 4-kind heap clears (one run). The flip is
-          reliable: 1 wrong label in 108 cleared parcels.</p>
+          reliable: 1 wrong label in 108 cleared parcels. The top-box skill
+          does not pass yet, because the model does not see the stack.</p>
       </div>
 
       <div class="panel" id="e-open">
@@ -3053,6 +3112,17 @@ push "sweep lone item beyond wooden desk border"</pre>
             <td>better camera and even, fixed lighting; a segmentation
               model in the planner to split touching parcels (a watershed
               cut split single bags, so it is not used)</td>
+          </tr>
+          <tr>
+            <td>Stacks</td>
+            <td>top-box skill does not pass</td>
+            <td>stack frames: top text wins 41 % / 19 % (pass 80 %), error
+              about 4&deg; with any text; fbs uses the stack grasp on normal
+              boxes; planner: zero-shot finds 1/25 stacks, 500M probe AUC
+              0.84</td>
+            <td>20-25 good box-stack demos (a new skill, not corrections);
+              a planner stack check: the 2.2B probe (23/25) in 4 bits, to fit
+              next to SmolVLA</td>
           </tr>
           <tr>
             <td>Start</td>
