@@ -1453,7 +1453,7 @@ project phases and the engineering details.">
             </div>
             <div class="ph" style="left:280px;top:417px;--c:#be123c">
               <h4><a href="#p7">Limits and next steps</a></h4>
-              <p>Vision, stacks, start, data, compute and the gripper.</p>
+              <p>Vision, stacks, demo consistency and compute.</p>
             </div>
           </div>
         </div>
@@ -1895,7 +1895,7 @@ project phases and the engineering details.">
         <figure class="phase-video">
           <video src="videos/phase7.mp4" poster="videos/phase7.jpg"
             data-noauto playsinline></video>
-          <figcaption><b>Phase 07 in the full video</b> (0:37, with
+          <figcaption><b>Phase 07 in the full video</b> (0:32, with
             music).</figcaption>
         </figure>
         <p class="sub">What still fails, and the fix I would try next.</p>
@@ -1908,28 +1908,23 @@ project phases and the engineering details.">
           <tr>
             <td><b>Vision</b></td>
             <td>Touching dark parcels look like one region.</td>
-            <td>Use a better camera and even, fixed lighting. Add a
-              segmentation planner that splits touching parcels.</td>
+            <td>Use a better camera. Add a segmentation planner that splits
+              touching parcels.</td>
           </tr>
           <tr>
             <td><b>Stacks</b></td>
-            <td>SmolVLA does not see a stacked box well, so the top-box
-              skill does not pass.</td>
+            <td>SmolVLA does not see a stacked box well: the top-box skill
+              fails.</td>
             <td>Record 20-25 more box-stack demos, and let the planner find
               the stack and send the top-box text.</td>
           </tr>
           <tr>
-            <td><b>Start</b></td>
-            <td>It waits at home 14-34 % of the time.</td>
-            <td>Record corrections that start at home, keep them short,
-              and pick each model with the start test.</td>
-          </tr>
-          <tr>
-            <td><b>Data</b></td>
-            <td>With one text, 4+ parcels fail. The planner is not reliable
-              yet.</td>
-            <td>Record more demos of full heaps, labelled with the parcel
-              taken, and train the planner on them.</td>
+            <td><b>Consistency</b></td>
+            <td>On boxes, the gripper opens and closes many times before it
+              holds.</td>
+            <td>My demos had this hesitant grip adjustment, and the model
+              copied it. Record more consistent demos with one firm
+              close.</td>
           </tr>
           <tr>
             <td><b>Compute</b></td>
@@ -1938,13 +1933,6 @@ project phases and the engineering details.">
             <td>More GPU compute and memory bandwidth make it faster. More
               VRAM does not, but it fits a larger planner (2.2B: about
               4.5 GB).</td>
-          </tr>
-          <tr>
-            <td><b>Robot</b></td>
-            <td>On boxes, the gripper closes many times before it
-              holds.</td>
-            <td>Add soft, high-friction pads and more grip force, so a box
-              holds at the first close.</td>
           </tr>
         </table>
         <div class="grid2" style="margin-top:36px;align-items:start">
@@ -3109,9 +3097,9 @@ push "sweep lone item beyond wooden desk border"</pre>
             <td>touching dark parcels look like one</td>
             <td>top-view regions merge a black box and a black bag; grasp
               in the gap; bag push on the black box (8-heap)</td>
-            <td>better camera and even, fixed lighting; a segmentation
-              model in the planner to split touching parcels (a watershed
-              cut split single bags, so it is not used)</td>
+            <td>better camera; a segmentation model in the planner to split
+              touching parcels (a watershed cut split single bags, so it is
+              not used)</td>
           </tr>
           <tr>
             <td>Stacks</td>
@@ -3125,22 +3113,14 @@ push "sweep lone item beyond wooden desk border"</pre>
               next to SmolVLA</td>
           </tr>
           <tr>
-            <td>Start</td>
-            <td>waits at home 14-34 % of the run</td>
-            <td>benchmark "at home" column; kind3 e2 waited 145 s of
-              179 s</td>
-            <td>corrections that start at home; short fragments (7 % of
-              the mix kept the start, 45 % broke it); pick the checkpoint
-              with the start test</td>
-          </tr>
-          <tr>
-            <td>Data</td>
-            <td>heaps of 4+ parcels fail</td>
-            <td>1/6 at 4 parcels; no model clears 8 with no help; far edge
-              in 14/99 demos; no demo recovers a parcel on the table</td>
-            <td>more full-heap demos and corrections, labelled with the
-              parcel taken (from the grasp position), to train the
-              planner; or a larger model</td>
+            <td>Consistency</td>
+            <td>box grasps need many tries</td>
+            <td>hard-heap eps 0-2: up to 45 s of grasp retries on orange
+              boxes, the gripper opens and closes many times; bags do not
+              show it. The operator demos have the same hesitant grip
+              adjustment (open, close, open to set the opening)</td>
+            <td>record more consistent demos: one smooth grasp with one
+              firm close; drop or re-record the hesitant ones</td>
           </tr>
           <tr>
             <td>Compute</td>
@@ -3150,15 +3130,6 @@ push "sweep lone item beyond wooden desk border"</pre>
             <td>more compute and memory bandwidth (more CUDA/tensor cores,
               clock) for speed; more VRAM only for larger models (2.2B
               planner ~4.5 GB, batch &gt; 12)</td>
-          </tr>
-          <tr>
-            <td>Robot</td>
-            <td>box grasps need many tries</td>
-            <td>hard-heap eps 0-2: up to 45 s of grasp retries on orange
-              boxes, the gripper opens and closes many times; bags do not
-              show it</td>
-            <td>soft, high-friction jaw pads and more grip force; then
-              measure the first-close hold rate</td>
           </tr>
         </table>
         <div class="row3">
