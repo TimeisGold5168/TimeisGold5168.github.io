@@ -3136,12 +3136,17 @@ push "sweep lone item beyond wooden desk border"</pre>
       <div class="panel" id="e-bugs">
         <h2>bugs.log</h2>
         <p class="muted">Symptom, how it got in, how we found it, fix,
-          result. Click to expand.</p>
+          result. Each title names the task; an open entry names the model
+          and the phase. Click to expand.</p>
 
         <details>
-          <summary>ACT jerks every 100 frames<span class="tag fix">
+          <summary>ACT jerks every 100 frames (cube task)<span class="tag fix">
               fixed</span></summary>
           <dl>
+            <dt>model</dt>
+            <dd>ACT, first attempt (<code>lerobot-so101-first-act</code>)</dd>
+            <dt>phase</dt>
+            <dd>cube warm-up, before <a href="#e-setup">p01</a></dd>
             <dt>symptom</dt>
             <dd>Jumps up to 69.9&deg; at frames 100, 200,
               300.</dd>
@@ -3157,8 +3162,12 @@ push "sweep lone item beyond wooden desk border"</pre>
         </details>
 
         <details>
-          <summary>Policy ignores the cameras at run time<span class="tag fix">fixed</span></summary>
+          <summary>Policy ignores the cameras at run time (cube task)<span class="tag fix">fixed</span></summary>
           <dl>
+            <dt>model</dt>
+            <dd>ACT, first attempt</dd>
+            <dt>phase</dt>
+            <dd>cube warm-up, before <a href="#e-setup">p01</a></dd>
             <dt>symptom</dt>
             <dd>Arm stalls, never closes the gripper.</dd>
             <dt>got in</dt>
@@ -3175,9 +3184,13 @@ push "sweep lone item beyond wooden desk border"</pre>
         </details>
 
         <details>
-          <summary>Control loop at 10-15 Hz<span class="tag fix">
+          <summary>Control loop at 10-15 Hz (parcel task)<span class="tag fix">
               fixed</span></summary>
           <dl>
+            <dt>model</dt>
+            <dd>all models in <code>rollout_mixed.py</code> (Diffusion, SmolVLA)</dd>
+            <dt>phase</dt>
+            <dd><a href="#e-data">p02</a> &middot; robot runs of the push dataset A1</dd>
             <dt>got in</dt>
             <dd><code>prepare_observation_for_inference</code>
               converts images to float on the CPU.</dd>
@@ -3190,9 +3203,13 @@ push "sweep lone item beyond wooden desk border"</pre>
         </details>
 
         <details>
-          <summary>Loop drops to 5 Hz, keys dead<span class="tag fix">
+          <summary>Loop drops to 5 Hz, keys dead (parcel task)<span class="tag fix">
               fixed</span></summary>
           <dl>
+            <dt>model</dt>
+            <dd>all models (rollout and recording tools)</dd>
+            <dt>phase</dt>
+            <dd><a href="#e-data">p02</a> &middot; robot runs of the push dataset A1</dd>
             <dt>got in</dt>
             <dd>Rerun <code>rr.log</code> blocks; mpv reads
               the terminal keys.</dd>
@@ -3204,9 +3221,13 @@ push "sweep lone item beyond wooden desk border"</pre>
         </details>
 
         <details>
-          <summary>Diffusion too slow to plan<span class="tag fix">
+          <summary>Diffusion too slow to plan (parcel task)<span class="tag fix">
               fixed</span></summary>
           <dl>
+            <dt>model</dt>
+            <dd>Diffusion Policy (dataset A1)</dd>
+            <dt>phase</dt>
+            <dd><a href="#e-data">p02</a> &middot; robot runs of the push dataset A1</dd>
             <dt>got in</dt>
             <dd>DDPM default, 100 steps (0.8 s).</dd>
             <dt>fix</dt>
@@ -3215,9 +3236,13 @@ push "sweep lone item beyond wooden desk border"</pre>
         </details>
 
         <details>
-          <summary>BSP jerks above 1x<span class="tag fix">fixed
+          <summary>BSP jerks above 1x (cube task)<span class="tag fix">fixed
             </span></summary>
           <dl>
+            <dt>model</dt>
+            <dd>Diffusion-BSP (cube at spot SQ)</dd>
+            <dt>phase</dt>
+            <dd><a href="#e-speed">p03</a> &middot; B-spline policy</dd>
             <dt>symptom</dt>
             <dd>Operator saw jerks at 1.35x.</dd>
             <dt>got in</dt>
@@ -3238,8 +3263,12 @@ push "sweep lone item beyond wooden desk border"</pre>
 
         <details>
           <summary>torch.compile recompiles, then corrupts the KV
-            cache<span class="tag fix">fixed</span></summary>
+            cache (parcel task)<span class="tag fix">fixed</span></summary>
           <dl>
+            <dt>model</dt>
+            <dd>SmolVLA (compiled denoising)</dd>
+            <dt>phase</dt>
+            <dd><a href="#e-speed">p03</a> &middot; inference speed</dd>
             <dt>got in</dt>
             <dd><code>DynamicCache.crop()</code> changes the
               stride each step (recompile). The cache holds a view of CUDA graph
@@ -3256,9 +3285,13 @@ push "sweep lone item beyond wooden desk border"</pre>
         </details>
 
         <details>
-          <summary>RTC: three engine bugs<span class="tag fix">fixed
+          <summary>RTC: three engine bugs (parcel task)<span class="tag fix">fixed
             </span></summary>
           <dl>
+            <dt>model</dt>
+            <dd>SmolVLA with RTC</dd>
+            <dt>phase</dt>
+            <dd><a href="#e-speed">p03</a> &middot; inference speed</dd>
             <dt>autograd</dt>
             <dd>Guidance under <code>enable_grad</code> with
               all params trainable. <code>FREEZE=1</code>: 273 &rarr; 204 ms,
@@ -3280,9 +3313,13 @@ push "sweep lone item beyond wooden desk border"</pre>
         </details>
 
         <details>
-          <summary>LR schedule ends early<span class="tag fix">fixed
+          <summary>LR schedule ends early (parcel task)<span class="tag fix">fixed
             </span></summary>
           <dl>
+            <dt>model</dt>
+            <dd>SmolVLA 80k (datasets A1 and B) and the BSP fine-tunes</dd>
+            <dt>phase</dt>
+            <dd><a href="#e-models">p02-p03</a> &middot; training</dd>
             <dt>got in</dt>
             <dd>A plain resume to 80k, or the default decay of
               30k, leaves 50k steps at min LR. BSP init from a 10k-decay config
@@ -3295,9 +3332,13 @@ push "sweep lone item beyond wooden desk border"</pre>
         </details>
 
         <details>
-          <summary>SmolVLA-BSP VLM in float32<span class="tag fix">
+          <summary>SmolVLA-BSP VLM in float32 (parcel task)<span class="tag fix">
               fixed</span></summary>
           <dl>
+            <dt>model</dt>
+            <dd>SmolVLA-BSP</dd>
+            <dt>phase</dt>
+            <dd><a href="#e-speed">p03</a> &middot; model comparison and speed</dd>
             <dt>got in</dt>
             <dd>Warm-start weights not cast to the init
               dtype.</dd>
@@ -3308,8 +3349,12 @@ push "sweep lone item beyond wooden desk border"</pre>
         </details>
 
         <details>
-          <summary>DAgger round 1: robot stays at home<span class="tag fix">fixed</span></summary>
+          <summary>DAgger round 1: robot stays at home (parcel task)<span class="tag fix">fixed</span></summary>
           <dl>
+            <dt>model</dt>
+            <dd>SmolVLA B + corrections (<code>smolvla_b_dg</code>)</dd>
+            <dt>phase</dt>
+            <dd><a href="#e-dagger">p04</a> &middot; DAgger round 1</dd>
             <dt>got in</dt>
             <dd>83 corrections = 45 % of frames, each with a
               1.4 s idle tail at home and no start motion.</dd>
@@ -3324,9 +3369,13 @@ push "sweep lone item beyond wooden desk border"</pre>
         </details>
 
         <details>
-          <summary>fbs tilts to the new skill<span class="tag skip">
+          <summary>fbs tilts to the new skill (parcel task)<span class="tag skip">
               model rejected</span></summary>
           <dl>
+            <dt>model</dt>
+            <dd>SmolVLA <code>smolvla_b_fbs</code></dd>
+            <dt>phase</dt>
+            <dd><a href="#e-dagger">p04</a> &middot; DAgger round 3 (stacked boxes)</dd>
             <dt>got in</dt>
             <dd>Box data 33 % of frames, applied twice (fbs
               from fb). Same task text for every skill.</dd>
@@ -3341,9 +3390,13 @@ push "sweep lone item beyond wooden desk border"</pre>
         </details>
 
         <details>
-          <summary>Grasp finder misses big boxes<span class="tag fix">
+          <summary>Grasp finder misses big boxes (parcel task)<span class="tag fix">
               fixed</span></summary>
           <dl>
+            <dt>model</dt>
+            <dd>data tool <code>trim_corrections.py</code> (the stack corrections of fbs)</dd>
+            <dt>phase</dt>
+            <dd><a href="#e-dagger">p04</a> &middot; DAgger round 3</dd>
             <dt>got in</dt>
             <dd>Rule "gripper &lt; 30" never fires on a wide
               box.</dd>
@@ -3354,9 +3407,13 @@ push "sweep lone item beyond wooden desk border"</pre>
         </details>
 
         <details>
-          <summary>BSP start-test roll is NaN<span class="tag fix">
+          <summary>BSP start-test roll is NaN (parcel task)<span class="tag fix">
               fixed</span></summary>
           <dl>
+            <dt>model</dt>
+            <dd>SmolVLA-BSP (<code>smolvla_bsp_b_fb</code>)</dd>
+            <dt>phase</dt>
+            <dd><a href="#e-dagger">p04</a> &middot; start test</dd>
             <dt>got in</dt>
             <dd>BSP plans cover 10-16 frames, NaN after.</dd>
             <dt>fix</dt>
@@ -3366,9 +3423,13 @@ push "sweep lone item beyond wooden desk border"</pre>
         </details>
 
         <details>
-          <summary>Jerky runs with Chrome open<span class="tag fix">
+          <summary>Jerky runs with Chrome open (parcel task)<span class="tag fix">
               procedure</span></summary>
           <dl>
+            <dt>model</dt>
+            <dd>SmolVLA fb and fbs (robot runs)</dd>
+            <dt>phase</dt>
+            <dd><a href="#e-dagger">p04</a> &middot; robot tests of round 3</dd>
             <dt>symptom</dt>
             <dd>Loop down to 6 Hz, jerk 2.7x, 3.4-3.9
               flips/s.</dd>
@@ -3379,9 +3440,13 @@ push "sweep lone item beyond wooden desk border"</pre>
         </details>
 
         <details>
-          <summary>Planner: 17 s per decision<span class="tag fix">
+          <summary>Planner: 17 s per decision (parcel task)<span class="tag fix">
               fixed</span></summary>
           <dl>
+            <dt>model</dt>
+            <dd>planner, SmolVLM2-2.2B</dd>
+            <dt>phase</dt>
+            <dd><a href="#e-planner">p05</a> &middot; planner test</dd>
             <dt>got in</dt>
             <dd>SmolVLM2 image splitting makes many tiles per
               image.</dd>
@@ -3391,8 +3456,12 @@ push "sweep lone item beyond wooden desk border"</pre>
         </details>
 
         <details>
-          <summary>Results log hides the blend of Diffusion runs<span class="tag fix">fixed</span></summary>
+          <summary>Results log hides the blend of Diffusion runs (parcel task)<span class="tag fix">fixed</span></summary>
           <dl>
+            <dt>model</dt>
+            <dd>Diffusion-BSP</dd>
+            <dt>phase</dt>
+            <dd><a href="#e-speed">p03</a> &middot; speed benchmark</dd>
             <dt>got in</dt>
             <dd>The settings text added <code>blend</code> only
               inside the SmolVLA branch.</dd>
@@ -3407,8 +3476,12 @@ push "sweep lone item beyond wooden desk border"</pre>
         </details>
 
         <details>
-          <summary>SmolVLA TensorRT BF16 error 2.3&deg;<span class="tag open">open</span></summary>
+          <summary>SmolVLA TensorRT BF16 error 2.3&deg; (parcel task)<span class="tag open">open</span></summary>
           <dl>
+            <dt>model</dt>
+            <dd>SmolVLA (TensorRT export)</dd>
+            <dt>phase</dt>
+            <dd><a href="#e-speed">p03</a> &middot; inference speed</dd>
             <dt>result</dt>
             <dd>258 &rarr; 226 ms, error 2.33&deg; &gt; limit.
               VLM is already bf16 and not the slow part. Not used.</dd>
@@ -3416,8 +3489,12 @@ push "sweep lone item beyond wooden desk border"</pre>
         </details>
 
         <details>
-          <summary>SmolVLA follows a distractor on a trained spot<span class="tag open">open</span></summary>
+          <summary>SmolVLA follows a distractor on a trained spot (cube task)<span class="tag open">open</span></summary>
           <dl>
+            <dt>model</dt>
+            <dd>SmolVLA (ACT and Diffusion as controls)</dd>
+            <dt>phase</dt>
+            <dd>cube warm-up, before <a href="#e-setup">p01</a></dd>
             <dt>result</dt>
             <dd>Cube task: blue cube on a trained spot, SmolVLA
               picked 0/6 vs 3/3 off-spot (Fisher p = 0.012). ACT and Diffusion
