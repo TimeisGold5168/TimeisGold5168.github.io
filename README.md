@@ -1,6 +1,6 @@
 # Lee Zhen Ting: a VLA sorting parcels on an SO-101 arm
 
-Portfolio page: https://timeisgold5168.github.io/
+Project page: https://timeisgold5168.github.io/
 
 This repo holds only the published page. The source is `site/` in the
 project repo
