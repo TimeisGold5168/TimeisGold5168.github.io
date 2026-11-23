@@ -2205,24 +2205,24 @@ project phases and the engineering details.">
             <td>smolvla b</td>
             <td>15k</td>
             <td>12</td>
-            <td>-</td>
-            <td>-</td>
+            <td>5.2 h</td>
+            <td>0.032 at 10k (0.029 at 15k)</td>
           </tr>
           <tr>
             <td><code>smolvla_parcel_b_fbs</code> (10k)</td>
             <td>fb 10k</td>
             <td>10k</td>
             <td>12</td>
-            <td>-</td>
-            <td>-</td>
+            <td>3.5 h</td>
+            <td>0.029</td>
           </tr>
           <tr>
             <td><code>smolvla_parcel_b_sk3d_10k</code></td>
             <td>smolvla b</td>
             <td>10k</td>
             <td>12</td>
-            <td>~3.4 h</td>
-            <td>-</td>
+            <td>3.5 h</td>
+            <td>0.034</td>
           </tr>
           <tr>
             <td><code>smolvla_parcel_b_sk5d_10k</code></td>
@@ -2230,12 +2230,20 @@ project phases and the engineering details.">
             <td>10k</td>
             <td>12</td>
             <td>3.4 h</td>
-            <td>-</td>
+            <td>0.038</td>
           </tr>
         </table>
         <p class="muted">Diffusion 89M (U-Net shrunk; default 278M did not fit
           6 GB). SmolVLA 450M, 100M trained (VLM frozen, action expert
           only).</p>
+        <p class="muted">Loss = the training loss at the last step (from the
+          run logs). It shows that a run converged. It does not rank the
+          models: Diffusion (noise MSE) and SmolVLA (flow-matching MSE) use
+          different losses, the BSP rows predict B-spline targets, and the
+          fine-tunes train on different mixes. Example: fbs ended lower than
+          fb at 10k (0.029 against 0.032), but on the robot it used the stack
+          grasp on normal boxes. The offline tests and the robot runs compare
+          the models.</p>
       </div>
 
       <div class="panel" id="e-offline">
@@ -2243,14 +2251,17 @@ project phases and the engineering details.">
         <p class="muted">Test 1: MAE (deg, 5 arm joints, next 1 s). Test 2:
           flip decision on 99 eps (probe ceiling 95). Test 3: share of
           predictions that follow swapped images.</p>
+        <p class="muted">&darr; T1 is an error: lower is better, higher is
+          worse. &uarr; T2 and T3 count correct answers: higher is
+          better.</p>
         <table>
           <tr>
             <th>Model</th>
-            <th>T1 train ref</th>
-            <th>T1 held-out</th>
-            <th>T2 /99</th>
-            <th>T3 flip img</th>
-            <th>T3 no-flip img</th>
+            <th>T1 train ref &darr;</th>
+            <th>T1 held-out &darr;</th>
+            <th>T2 /99 &uarr;</th>
+            <th>T3 flip img &uarr;</th>
+            <th>T3 no-flip img &uarr;</th>
           </tr>
           <tr>
             <td>SmolVLA B 80k</td>
@@ -2285,7 +2296,7 @@ project phases and the engineering details.">
             <td>1.00</td>
           </tr>
         </table>
-        <p class="so">Offline, SmolVLA fits best. On the robot, Diffusion-BSP is best.
+        <p class="so">Offline, SmolVLA fits best. On the robot, Diffusion-BSP needed the least help.
           The held-out eps are old pilot eps with another approach, so the
           held-out error is high for all. T3 says a missed flip is more likely
           than a wrong flip.</p>
@@ -2294,66 +2305,37 @@ project phases and the engineering details.">
       <div class="panel" id="e-robot">
         <h2>p03 &middot; robot eval (dataset B)</h2>
         <p class="why">the same heaps for each model, one run per model: an indication, not a controlled test.</p>
-        <h3>5-parcel heap (hard)</h3>
+        <h3>heaps of 5 and 8 parcels</h3>
         <table>
           <tr>
-            <th>Model</th>
-            <th>Cleared</th>
-            <th>Time</th>
-            <th>Labels</th>
-            <th>Failure mode</th>
+            <th>Heap</th>
+            <th>Runs</th>
+            <th>Clean (all cleared, no help)</th>
+            <th>Issues found</th>
           </tr>
           <tr>
-            <td>Diffusion-BSP, 1.5x</td>
-            <td class="ok">5/5</td>
-            <td>86 s</td>
-            <td>5/5</td>
-            <td>hand pushed the box closer in
-              eps 3, 4</td>
+            <td>5 parcels</td>
+            <td>3 (one per model: Diffusion-BSP, SmolVLA-BSP, SmolVLA
+              RTC)</td>
+            <td class="no">0</td>
+            <td>a hand had to push a box closer (Diffusion-BSP, eps 3, 4);
+              no grasp on the small boxes, 17-27 s idle at the start
+              (SmolVLA-BSP); 75 s hover, then the time limit (RTC)</td>
           </tr>
           <tr>
-            <td>SmolVLA-BSP, 1.5x</td>
-            <td>4/5</td>
-            <td>219 s</td>
-            <td>4/4</td>
-            <td>17-27 s idle at start; no grasp on small
-              boxes</td>
-          </tr>
-          <tr>
-            <td>SmolVLA RTC</td>
-            <td>3/5</td>
-            <td>231 s (limit)</td>
-            <td>3/3</td>
-            <td>75 s hover before grasp</td>
+            <td>8 parcels</td>
+            <td>3 (the same models)</td>
+            <td class="no">0</td>
+            <td>stops in front of parcels at the far edge (Diffusion-BSP);
+              pushes move other parcels off the tray (SmolVLA-BSP); bag push
+              on the black box (RTC)</td>
           </tr>
         </table>
-        <h3>8-parcel heap (training heaps: 4-5 parcels)</h3>
-        <table>
-          <tr>
-            <th>Model</th>
-            <th>Success (log)</th>
-            <th>No help</th>
-            <th>Main failure</th>
-          </tr>
-          <tr>
-            <td>Diffusion-BSP, 1.5x</td>
-            <td>6/8</td>
-            <td>5/8</td>
-            <td>stops at far edge</td>
-          </tr>
-          <tr>
-            <td>SmolVLA-BSP, 1.5x</td>
-            <td>3/8</td>
-            <td>1/8</td>
-            <td>moves other parcels off the tray</td>
-          </tr>
-          <tr>
-            <td>SmolVLA RTC</td>
-            <td>8/8 in 341 s</td>
-            <td>-</td>
-            <td>black box treated as a bag</td>
-          </tr>
-        </table>
+        <p class="so">no heap above 3 parcels was cleared with no help. The
+          pushes move other parcels toward the far edge, where they cluster
+          and move each other, and the models stop there: only 14/99 demos
+          reach that far. This is how we found the far-edge problem (fixed
+          with short corrections in <a href="#e-dagger">p04</a>).</p>
         <h3>Medium (bag on bag + box on box)</h3>
         <p>All 3 models: 2/4 with no help. Bag on bag works (about 25 training
           starts). Box on box fails (5 training starts): pushed as one stack,
